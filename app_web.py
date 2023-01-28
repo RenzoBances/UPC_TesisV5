@@ -391,6 +391,7 @@ else:
                         
                         stage = ""
                         st.session_state.count_rep = 0
+                        flagTime = False
                         # Setup mediapipe instance
                         with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
                             cap.isOpened()
@@ -758,6 +759,7 @@ else:
                                             st.session_state.count_pose = 0 
                                     #Ejerccio Frontplank
                                     elif body_language_class == "front_plank" and body_language_prob_p > 25:
+                                        
                                         print(f'body_language_prob_p: {body_language_prob_p}')
                                         print(f'start: {start}')
                                         print(f'df_trainers_angles: {df_trainers_angles}')
@@ -791,15 +793,7 @@ else:
                                             down = True
                                             stage = "up"
                                             start +=1
-                                            # ############################################
-                                            # update_dashboard()
-                                            # ############################################ 
-                                            # print(f'right_shoulder_angle: {right_shoulder_angle}')
-                                            # print(f'right_hit_angle: {right_hit_angle}')
-                                            # print(f'right_ankle_angle: {right_ankle_angle}')
-                                            # print(f'Paso Segunda Pose')
-                                            # cv2.putText(image, 'WAIT 5 SECONDS', (100,250), cv2.FONT_HERSHEY_SIMPLEX, 2, (87,59,59), 3, cv2.LINE_AA)
-                                            # cv2.waitKey(5000)
+                                            flagTime = True
                                         elif up == True and down == True and right_shoulder_angle in range(int(right_shoulder_angle_in - desv_right_shoulder_angle_in) , int(right_shoulder_angle_in + desv_right_shoulder_angle_in + 1)) and right_hit_angle in range(int(right_hit_angle_in - desv_right_hit_angle_in), int(right_hit_angle_in + desv_right_hit_angle_in + 1)) and right_ankle_angle in range(int(right_ankle_angle_in - desv_right_ankle_angle_in),int(right_ankle_angle_in + desv_right_ankle_angle_in + 1)):
                                             print(f'right_shoulder_angle: {right_shoulder_angle}')
                                             print(f'right_hit_angle: {right_hit_angle}')
@@ -810,7 +804,6 @@ else:
                                             down = False
                                             stage = "down"
                                             start = 0
-                                            st.info('This is a purely informational message', icon="ℹ️")
                                             ############################################
                                             update_dashboard()
                                             ######################################s######
@@ -1113,15 +1106,16 @@ else:
                                         cv2.circle(image, (right_ankle_x2, right_ankle_y2), 6, (128, 0, 255),-1)
                                         cv2.circle(image, (right_ankle_x3, right_ankle_y3), 6, (128, 0, 255),-1)
                                         cv2.putText(image, str(int(right_ankle_angle)), (right_ankle_x2 + 30, right_ankle_y2), 1, 1.5, (128, 0, 250), 2)
-                                        if start == 2:
+                                        if start == 2 and flagTime == True:
                                             cv2.putText(image, 'WAIT FOR ' + str(st.session_state.seconds_rest_time) + ' s' , (155,350), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,0,0), 3, cv2.LINE_AA)
                                             stframe.image(image,channels = 'BGR',use_column_width=True)
                                             time.sleep(int(st.session_state.seconds_rest_time))
-                                            cv2.putText(image, "" , (155,350), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,0,0), 3, cv2.LINE_AA)
-                                            stframe.image(image,channels = 'BGR',use_column_width=True)
-                                            ############################################
+                                            #############################################
                                             update_dashboard()
                                             ######################################s######
+                                            cv2.putText(image, '' , (155,350), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,0,0), 3, cv2.LINE_AA)
+                                            stframe.image(image,channels = 'BGR',use_column_width=True)
+                                            flagTime = False
                                         else:
                                             stframe.image(image,channels = 'BGR',use_column_width=True)
 
@@ -1212,7 +1206,7 @@ else:
                                 except:
                                     stframe.image(image,channels = 'BGR',use_column_width=True)
                                     pass 
-                    # update_dashboard()                    
+                    update_dashboard()                    
                     cv2.rectangle(image, (50,180), (600,300), (0,255,0), -1)
                     cv2.putText(image, 'FINISHED EXERCISE', (100,250), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 3, cv2.LINE_AA)
 
