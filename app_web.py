@@ -401,7 +401,7 @@ else:
                                 ret, frame = cap.read()
                                 if ret == False:
                                     break
-                                # frame = cv2.flip(frame,1)
+                                frame = cv2.flip(frame,1)
                                 height, width, _ = frame.shape
                                 # Recolor image to RGB
                                 image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
